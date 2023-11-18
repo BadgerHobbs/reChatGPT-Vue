@@ -1,13 +1,13 @@
 
 <script lang="ts">
-import OpenAI from "openai";
-
 import TheHeader from "./components/TheHeader.vue";
 import ChatConversationsDropdown from "./components/chat/ChatConversationsDropdown.vue";
 import ChatConversation from "./components/chat/ChatConversation.vue";
 import ChatMessageInput from "./components/chat/ChatMessageInput.vue";
 
+import OpenAI from "openai";
 import Settings from "@/models/settings";
+import { Conversations, Message } from "./models/conversation-manager";
 
 export default {
   name: "App",
@@ -17,79 +17,167 @@ export default {
     ChatConversation,
     ChatMessageInput,
   },
-  setup() {
-    // Create Settings from storage
+  data() {
+    // Load Settings and Conversations from storage
     const settings = Settings.loadFromLocalStorage();
+    const conversations = Conversations.loadFromLocalStorage();
+
+    // Load conversation from URL ID param
+    const urlParams = new URLSearchParams(window.location.search);
+    let conversation = conversations.loadConversation(urlParams.get("id"));
+
+    let messageInput = "";
 
     return {
-      settings
+      settings,
+      conversations,
+      conversation,
+      messageInput,
     }
   },
-  data() {
-    return {
-      messages: [
-        { role: "system", content: "All responses in markdown format with syntax highlighting." }
-      ] as any[],
+  beforeMount() {
+    if (!this.conversation) {
+      this.createConversation();
     }
   },
   methods: {
-    getOpenAI() {
+    /**
+     * Create OpenAI connection object.
+     * @returns {OpenAI} OpenAI connection object.
+     */
+    getOpenAI(): OpenAI {
       return new OpenAI({
         apiKey: this.settings.apiKey!,
         dangerouslyAllowBrowser: true,
       })
     },
-    sendSystemMessage() {
+
+    /**
+     * Send system message.
+     * @param {string} content Message content.
+     */
+    sendSystemMessage(content: string) {
+      const message = new Message(
+        null,
+        "system",
+        content,
+        null,
+      );
+      this.conversation!.messages.push(message);
+
+      // Clear message input
+      this.messageInput = "";
     },
-    async sendMessage(message: string) {
 
-      const openai = this.getOpenAI();
+    /**
+     * Send user message.
+     * @param {string} content Message content.
+     */
+    async sendUserMessage(content: string) {
+      const message = new Message(
+        null,
+        "user",
+        content,
+        null,
+      );
+      this.conversation!.messages.push(message);
 
-      this.messages.push(
-        { role: "user", content: message }
-      )
+      // Clear message input
+      this.messageInput = "";
 
-      if (this.settings.stream)
-      {
-        const completion = await openai.chat.completions.create({
-          messages: this.messages,
-          model: this.settings.model!,
-          stream: true,
-        });
+      await this.conversation!.send(this.getOpenAI(), this.settings);
 
-        let chunks = [];
-
-        this.messages.push(
-          {
-            role: "loading",
-            content: "",
-          }
-        )
-
-        for await (const chunk of completion)
-        {
-          chunks.push(chunk.choices[0].delta.content);
-
-          this.messages[this.messages.length - 1] = {
-            role: "assistant",
-            content: chunks.join(""),
-          };
-        }
+      // Add to conversations if not already added
+      if (!this.conversations.conversations.some((conv) => conv.id === this.conversation!.id)) {
+        this.conversations.conversations.push(this.conversation!);
       }
-      else
-      {
-        const completion = await openai.chat.completions.create({
-          messages: this.messages,
-          model: this.settings.model!,
-        });
 
-        this.messages.push(
-          {
-            role: "assistant",
-            content: completion.choices[0].message.content!,
-          }
-        )
+      // Save conversations
+      this.conversations.saveToLocalStorage();
+    },
+
+    /**
+     * Revert to message with ID
+     * @param {string} messageId ID of message to revert to.
+     */
+    revertToMessage(messageId: string) {
+      // Revert message and set message input to content
+      const content = this.conversation!.revertToMessage(messageId);
+      this.messageInput = content;
+    },
+
+    /**
+     * Recreate message with ID.
+     * @param messageId ID of message to recreate.
+     */
+    recreateMessage(messageId: string) {
+      // Revert to message and send conversation again
+      this.conversation!.revertToMessage(messageId);
+      this.conversation!.send(this.getOpenAI(), this.settings);
+
+      // Save conversations
+      this.conversations.saveToLocalStorage();
+    },
+
+    /**
+     * Create new conversation.
+     */
+    createConversation() {
+      const conversation = this.conversations.createConversation();
+      this.conversation = conversation;
+
+      // Add system message if configured
+      if (this.settings.systemMessage) {
+        const message = new Message(
+          null,
+          "system",
+          this.settings.systemMessage,
+          null,
+        );
+        this.conversation.messages.push(message);
       }
+
+      // Update URL prarameter
+      this.updateUrlParam(this.conversation!.id);
+    },
+
+    /**
+     * Delete conversation with ID.
+     * @param {string} conversationId ID of conversation to delete.
+     */
+    deleteConversation(conversationId: string) {
+      this.conversations.deleteConversation(conversationId);
+
+      // Create new conversation if was current conversation
+      if (conversationId === this.conversation!.id) {
+        this.createConversation();
+      }
+
+      // Save conversations
+      this.conversations.saveToLocalStorage();
+    },
+
+    /**
+     * Load conversation with ID or create new one if not exist.
+     * @param {string} conversationId ID of conversation to load.
+     */
+    loadConversation(conversationId: string) {
+      this.conversation = this.conversations.loadConversation(conversationId) ?? this.conversations.createConversation();
+
+      // Update URL prarameter
+      this.updateUrlParam(this.conversation!.id);
+    },
+
+    /**
+     * Update URL conversation ID parameter.
+     * @param {string} conversationId ID of conversation.
+     */
+    updateUrlParam(conversationId: string) {
+      const url = new URL(window.location.href);
+      url.searchParams.set("id", conversationId);
+
+      // To replace the current URL in the history
+      window.history.replaceState({}, "", url.toString());
     }
   }
 }
@@ -103,17 +191,22 @@ export default {
 
       <div class="m-3 d-flex flex-wrap">
 
-        <ChatConversationsDropdown :conversations="['test1', 'test2', 'test3']" />
+        <ChatConversationsDropdown :conversations="conversations" @click:load-conversation="loadConversation"
+          @click:delete-conversation="deleteConversation" />
 
-        <button class="btn btn-primary my-1" type="button">Create</button>
+        <button class="btn btn-primary my-1" type="button" @click="createConversation">Create</button>
 
-        <button class="btn btn-danger my-1 ml-auto" type="button">Delete</button>
+        <button class="btn btn-danger my-1 ml-auto" type="button"
+          @click="deleteConversation(conversation!.id)">Delete</button>
 
       </div>
 
-      <ChatConversation class="mx-3" :messages="messages" />
+      <ChatConversation class="mx-3" :conversation="conversation!" @click:revert-to-message="revertToMessage"
+        @click:recreate-message="recreateMessage" />
 
-      <ChatMessageInput placeholder="Enter a message" class="mx-3" @send-message="sendMessage" />
+      <ChatMessageInput placeholder="Enter a message" class="mx-3" @send-user-message="sendUserMessage(messageInput)"
+        @send-system-message="sendSystemMessage(messageInput)" v-model="messageInput"
+        :enable-system-message="conversation!.messages.length === 0" />
 
     </div>
   </main>

@@ -22,6 +22,9 @@ export default {
         }
     },
     methods: {
+        /**
+         * Save settings.
+         */
         saveChanges() {
             this.settings.saveToLocalStorage();
         },

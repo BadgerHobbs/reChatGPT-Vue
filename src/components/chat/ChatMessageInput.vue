@@ -1,5 +1,6 @@
 
 <script lang="ts">
+import type { PropType } from 'vue'
 
 export default {
     name: "ChatMessageInput",
@@ -7,14 +8,29 @@ export default {
         placeholder: {
             type: String,
             required: false,
+        },
+        modelValue: {
+            type: Object as PropType<any>,
+            required: false,
+            default: null,
+        },
+        enableSystemMessage: {
+            type: Boolean,
+            required: false,
+            default: true,
         }
     },
-    emits: ['sendSystemMessage', 'sendMessage'],
-    data() {
-        return {
-            message: "",
-        }
-    }
+    emits: ['sendSystemMessage', 'sendUserMessage', 'update:modelValue'],
+    methods: {
+        /**
+         * Update textarea height to fit content.
+         * @param event Textarea input event.
+         */
+        autoResize(event: any) {
+            event.target.style.height = 'auto';
+            event.target.style.height = (event.target.scrollHeight) + 'px';
+        },
+    },
 }
 </script>
 
@@ -32,19 +48,18 @@ export default {
 
             <div class="TimelineItem-body">
                 <textarea class="form-control width-full color-bg-inset" style="overflow-y: hidden;"
-                    placeholder="Enter a response" v-model="message"></textarea>
+                    placeholder="Enter a response" :value="modelValue" @input="(event) => {
+                        autoResize(event);
+                        $emit('update:modelValue', (event as any).target.value)
+                    }" @keydown.enter.exact="$emit('sendUserMessage', ($event as any).target.valueage)"></textarea>
                 <div class="d-flex">
                     <div class="ml-auto">
-                        <button class="mr-2 btn btn-secondary mt-2" type="button" @click="(event) => {
-                            $emit('sendSystemMessage', message);
-                            message = '';
-                        }">
+                        <button v-if="enableSystemMessage" class="mr-2 btn btn-secondary mt-2" type="button"
+                            @click="$emit('sendSystemMessage', ($event as any).target.valueage)">
                             Send System Message
                         </button>
-                        <button class="btn btn-primary mt-2" type="button" @click="(event) => {
-                                $emit('sendMessage', message);
-                                message = '';
-                            }">
+                        <button class="btn btn-primary mt-2" type="button"
+                            @click="$emit('sendUserMessage', ($event as any).target.valueage)">
                             Send Message
                         </button>
                     </div>

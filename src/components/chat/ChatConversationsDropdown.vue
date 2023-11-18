@@ -1,11 +1,12 @@
 
 <script lang="ts">
+import { Conversations } from '@/models/conversation-manager';
 
 export default {
     name: "ChatConversationsDropdown",
     props: {
         conversations: {
-            type: Array,
+            type: Conversations,
             required: true,
         },
         initialValue: {
@@ -14,11 +15,12 @@ export default {
             default: null,
         },
     },
+    emits: ['click:loadConversation', 'click:deleteConversation'],
     data() {
         return {
             filter: "",
             value: this.initialValue,
-            filteredValues: this.conversations,
+            filteredValues: this.conversations.conversations,
         }
     },
 }
@@ -48,14 +50,15 @@ export default {
                 </header>
                 <form class="SelectMenu-filter">
                     <input class="SelectMenu-input form-control" type="text" placeholder="Filter" v-model="filter" @input="() => {
-                        filteredValues = conversations.filter((item: any) => item.toLowerCase().includes(filter.toLowerCase()))
+                        filteredValues = conversations.conversations.filter((item: any) => item.toLowerCase().includes(filter.toLowerCase()))
                     }">
                 </form>
                 <div class="SelectMenu-list">
                     <button class="SelectMenu-item parent mr-auto" role="menuitem" v-for="v in filteredValues">
-                        <span class="width-full">{{ v }}</span>
+                        <span class="width-full" @click="$emit('click:loadConversation', v.id)">{{ v.name }}</span>
                         <div class="d-flex ml-auto">
-                            <a class="btn-octicon btn-octicon-danger p-0" type="button">
+                            <a class="btn-octicon btn-octicon-danger p-0" type="button"
+                                @click="$emit('click:deleteConversation', v.id)">
                                 <svg class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16"
                                     height="16">
                                     <path fill-rule="evenodd"
@@ -66,7 +69,8 @@ export default {
                         </div>
                     </button>
                 </div>
-                <footer class="SelectMenu-footer">Showing {{ filteredValues.length }} of {{ conversations.length }}</footer>
+                <footer class="SelectMenu-footer">Showing {{ filteredValues.length }} of {{
+                    conversations.conversations.length }}</footer>
             </div>
         </div>
     </details>
