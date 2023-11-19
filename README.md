@@ -1,40 +1,51 @@
 # reChatGPT
 
-This template should help get you started developing with Vue 3 in Vite.
+reChatGPT is an open-source, smooth ChatGPT interface, compatible with various OpenAI models such as GPT-3.5 Turbo and GPT-4. Built with the progressive Vue3 framework and styled with primerCSS, reChatGPT offers a customizable, responsive user experience.
 
-## Recommended IDE Setup
+![rechatgpt](https://github.com/BadgerHobbs/reChatGPT-Vue/assets/23462440/9cf31479-b3ef-4d7e-ab62-e183c3e398c1)
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+## Features
 
-## Type Support for `.vue` Imports in TS
+- **Vue3:** Built using the progressive JavaScript framework Vue3, known for its efficiency and speed, ensuring a smooth and reactive user experience.
+- **primerCSS Integration:** Aesthetically designed with primerCSS, GitHub's own CSS framework, providing a familiar and sleek user interface.
+- **Support for OpenAI Models:** Flexible integration with multiple OpenAI language models, including GPT-3.5 Turbo and GPT-4.
+- **Configurable Settings:** Customize your experience by selecting the AI model, adjusting the response time, and setting other preferences to suit your needs.
+- **Multiple Themes:** Choose from a variety of themes to match your style or mood, or even create your own theme for a personal touch.
+- **Responsive Design:** Enjoy a seamless experience across devices, whether you're on a desktop, tablet, or mobile.
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+## Getting Started
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+To get a local copy up and running, follow these simple example steps.
 
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+### Prerequisites
 
-## Customize configuration
+Before you begin, ensure you have the following installed:
+- Node.js
+- NPM package manager
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+You will also need an OpenAI API key in order to use reChatGPT, so if you don't have one already go ahead and create one.
 
-## Project Setup
+### Installation
 
-```sh
-npm install
-```
+1. **Clone the repository**
 
-### Compile and Hot-Reload for Development
+    ```bash
+    git clone https://github.com/your-username/reChatGPT.git
+    cd reChatGPT
+    ```
 
-```sh
-npm run dev
-```
+2. **Install dependencies**
 
-### Type-Check, Compile and Minify for Production
+    ```bash
+    npm install
+    ```
 
-```sh
-npm run build
-```
+3. **Run local dev server**
+
+    ```bash
+    npm run dev
+    ```
+
+## License
+
+The code and documentation in this project are released under the [GPLv3 License](LICENSE).
