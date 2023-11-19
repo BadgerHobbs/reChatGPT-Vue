@@ -82,15 +82,15 @@ export default {
       );
       this.conversation!.messages.push(message);
 
-      // Clear message input
-      this.messageInput = "";
-
-      await this.conversation!.send(this.getOpenAI(), this.settings);
-
       // Add to conversations if not already added
       if (!this.conversations.conversations.some((conv) => conv.id === this.conversation!.id)) {
         this.conversations.conversations.push(this.conversation!);
       }
+
+      // Clear message input
+      this.messageInput = "";
+
+      await this.conversation!.send(this.getOpenAI(), this.settings);
 
       // Save conversations
       this.conversations.saveToLocalStorage();
@@ -194,8 +194,8 @@ export default {
 
       <div class="m-3 d-flex flex-wrap">
 
-        <ChatConversationsDropdown :conversations="conversations" @click:load-conversation="loadConversation"
-          @click:delete-conversation="deleteConversation" />
+        <ChatConversationsDropdown :conversations="conversations" :initial-value="conversation!"
+          @click:load-conversation="loadConversation" @click:delete-conversation="deleteConversation" />
 
         <button class="btn btn-primary my-1" type="button" @click="createConversation">Create</button>
 

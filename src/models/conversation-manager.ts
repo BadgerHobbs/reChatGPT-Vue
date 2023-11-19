@@ -140,7 +140,7 @@ export class Conversation {
 		const responseMessage = new Message(null, "loading", null, null);
 		this.messages.push(responseMessage);
 
-		if (settings.stream) {
+		if (settings.stream?.toLowerCase() !== "false") {
 			const response = await openai.chat.completions.create({
 				messages: messages,
 				model: settings.model!,

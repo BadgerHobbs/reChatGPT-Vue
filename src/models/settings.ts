@@ -17,7 +17,7 @@ export default class Settings {
 	responseFormat: Map<string, string> | null;
 	seed: number | null;
 	stop: string | Array<string> | null;
-	stream: boolean | null;
+	stream: string | null;
 	temperature: number | null;
 	toolChoice: string | Map<string, string> | null;
 	tools: Array<Map<string, any>> | null;
@@ -42,7 +42,7 @@ export default class Settings {
 	 * @param {object} responseFormat
 	 * @param {integer} seed
 	 * @param {string | array} stop
-	 * @param {boolean} stream
+	 * @param {string} stream
 	 * @param {float} temperature
 	 * @param {string | object} toolChoice
 	 * @param {array} tools

@@ -1,6 +1,6 @@
 
 <script lang="ts">
-import { Conversations } from '@/models/conversation-manager';
+import { Conversations, Conversation } from '@/models/conversation-manager';
 
 export default {
     name: "ChatConversationsDropdown",
@@ -10,7 +10,7 @@ export default {
             required: true,
         },
         initialValue: {
-            type: String,
+            type: Conversation,
             required: false,
             default: null,
         },
@@ -19,7 +19,6 @@ export default {
     data() {
         return {
             filter: "",
-            value: this.initialValue,
             filteredValues: this.conversations.conversations,
         }
     },
@@ -29,7 +28,7 @@ export default {
 <template>
     <details class="dropdown details-reset details-overlay d-inline-block mr-2 my-1">
         <summary class="btn width-full d-flex">
-            <span v-if="value">{{ value }}</span>
+            <span v-if="initialValue.name">{{ initialValue.name }}</span>
             <span v-else>Select a Conversation</span>
             <div class="ml-auto pl-1">
                 <div class="dropdown-caret"></div>
