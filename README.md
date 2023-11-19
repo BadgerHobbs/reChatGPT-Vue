@@ -46,6 +46,13 @@ You will also need an OpenAI API key in order to use reChatGPT, so if you don't 
     npm run dev
     ```
 
+## Future Enhancements
+
+- [] Improved error handling and warnings.
+- [] Exporting/Importing data as JSON.
+- [] Renaming conversations.
+- [] Improved mobile responsiveness.
+
 ## License
 
 The code and documentation in this project are released under the [GPLv3 License](LICENSE).
