@@ -15,7 +15,13 @@ reChatGPT is an open-source, smooth ChatGPT interface, compatible with various O
 
 ## Getting Started
 
-To get a local copy up and running, follow these simple example steps.
+In order to start using reChatGPT, all that's required is an OpenAI API key. You can get this from your OpenAI developer account, which should charge you pay-as-you go for your usage (for average users this should cost less than the monthly subscription without the restrictions).
+
+Once you have your API key, you can either go to [rechatgpt.badgerhobbs.com](https://rechatgpt.badgerhobbs.com) and start using reChatGPT or use the below instructions to start running your own instance. The applicaiton is a static website, so there is no back-end and everything happens locally excluding the processing by OpenAI.
+
+## Development
+
+To get a local copy up and running for development, follow the below steps.
 
 ### Prerequisites
 
