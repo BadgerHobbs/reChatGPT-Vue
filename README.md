@@ -2,7 +2,7 @@
 
 reChatGPT is an open-source, smooth ChatGPT interface, compatible with various OpenAI models such as GPT-3.5 Turbo and GPT-4. Built with the progressive Vue3 framework and styled with primerCSS, reChatGPT offers a customizable, responsive user experience.
 
-![rechatgpt](https://github.com/BadgerHobbs/reChatGPT-Vue/assets/23462440/9cf31479-b3ef-4d7e-ab62-e183c3e398c1)
+![rechatgpt](https://github.com/BadgerHobbs/reChatGPT-Vue/assets/23462440/ac8d2f58-bf5f-4825-af99-bfda0a8755bd)
 
 ## Features
 
