@@ -51,7 +51,8 @@ export default {
                     placeholder="Enter a response" :value="modelValue" @input="(event) => {
                         autoResize(event);
                         $emit('update:modelValue', (event as any).target.value)
-                    }" @keydown.enter.exact="$emit('sendUserMessage', ($event as any).target.valueage)"></textarea>
+                    }"
+                    @keydown.enter.exact.prevent="$emit('sendUserMessage', ($event as any).target.valueage)"></textarea>
                 <div class="d-flex">
                     <div class="ml-auto">
                         <button v-if="enableSystemMessage" class="mr-2 btn btn-secondary mt-2" type="button"
