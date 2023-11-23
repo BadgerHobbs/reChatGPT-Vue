@@ -54,11 +54,11 @@ You will also need an OpenAI API key in order to use reChatGPT, so if you don't 
 
 ## Future Enhancements
 
-- [] Improved error handling and warnings.
-- [] Exporting/Importing data as JSON.
-- [] Renaming conversations.
-- [] Improved mobile responsiveness.
-- [] Support for Azure OpenAI.
+- [ ] Improved error handling and warnings.
+- [ ] Exporting/Importing data as JSON.
+- [ ] Renaming conversations.
+- [ ] Improved mobile responsiveness.
+- [ ] Support for Azure OpenAI.
 
 ## License
 
