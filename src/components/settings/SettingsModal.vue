@@ -65,8 +65,8 @@ export default {
                     @update:model-value="saveChanges" />
 
                 <SettingDropdown label="Stream" placeholder="Select Mode" :values="{
-                    true: 'True',
-                    false: 'False',
+                    'true': 'True',
+                    'false': 'False',
                 }" style="width: 50%;" v-model="settings.stream" @update:model-value="saveChanges" />
 
                 <SettingTextInput label="Stop" placeholder="Defaults to null" style="width: 50%;" v-model="settings.stop"
