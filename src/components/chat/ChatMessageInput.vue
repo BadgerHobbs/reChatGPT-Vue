@@ -5,6 +5,10 @@ import type { PropType } from 'vue'
 export default {
     name: "ChatMessageInput",
     props: {
+        conversationId: {
+            type: String,
+            required: true,
+        },
         placeholder: {
             type: String,
             required: false,
@@ -41,6 +45,15 @@ export default {
          */
         modelValue() {
             this.autoResize(this.$refs.messageTextArea);            
+        },
+
+        /**
+         * Focus on messageTextArea on conversationId change.
+         */
+        conversationId() {
+            (this.$refs.messageTextArea as any).focus({
+                preventScroll: true,
+            });
         }
     }
 }

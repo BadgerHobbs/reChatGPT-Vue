@@ -207,7 +207,7 @@ export default {
       <ChatConversation class="mx-3" :conversation="conversation!" @click:revert-to-message="revertToMessage"
         @click:recreate-message="recreateMessage" />
 
-      <ChatMessageInput placeholder="Enter a message" class="mx-3" @send-user-message="sendUserMessage(messageInput)"
+      <ChatMessageInput :conversation-id="conversation!.id" placeholder="Enter a message" class="mx-3" @send-user-message="sendUserMessage(messageInput)"
         @send-system-message="sendSystemMessage(messageInput)" v-model="messageInput"
         :enable-system-message="conversation!.messages.length === 0" />
 
