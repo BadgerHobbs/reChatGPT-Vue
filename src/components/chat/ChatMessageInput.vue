@@ -24,7 +24,7 @@ export default {
     methods: {
         /**
          * Update textarea height to fit content.
-         * @param event Textarea input event.
+         * @param target Textarea input.
          */
         autoResize(target: any) {
 
