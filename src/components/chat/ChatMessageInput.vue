@@ -26,11 +26,23 @@ export default {
          * Update textarea height to fit content.
          * @param event Textarea input event.
          */
-        autoResize(event: any) {
-            event.target.style.height = 'auto';
-            event.target.style.height = (event.target.scrollHeight) + 'px';
+        autoResize(target: any) {
+
+            target.style.height = 'auto';
+
+            if (this.modelValue) {
+                target.style.height = (target.scrollHeight) + 'px';
+            }
         },
     },
+    watch: {
+        /**
+         * Resize on modelValue change.
+         */
+        modelValue() {
+            this.autoResize(this.$refs.messageTextArea);            
+        }
+    }
 }
 </script>
 
@@ -47,9 +59,10 @@ export default {
             </div>
 
             <div class="TimelineItem-body">
-                <textarea class="form-control width-full color-bg-inset" style="overflow-y: hidden;"
-                    placeholder="Enter a response" :value="modelValue" @input="(event) => {
-                        autoResize(event);
+                <textarea ref="messageTextArea" class="form-control width-full color-bg-inset" style="overflow-y: hidden;"
+                    placeholder="Enter a response"
+                    :value="modelValue"
+                    @input="(event) => {
                         $emit('update:modelValue', (event as any).target.value)
                     }"
                     @keydown.enter.exact.prevent="$emit('sendUserMessage', ($event as any).target.valueage)"></textarea>
