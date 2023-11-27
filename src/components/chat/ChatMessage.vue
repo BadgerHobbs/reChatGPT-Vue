@@ -36,6 +36,15 @@ export default {
             return this.marked.parse(this.message.content);
         }
     },
+    /**
+     * Scroll to bottom of page when message updated.
+     */
+    updated() {
+        window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: "auto",
+        });
+    }
 }
 </script>
 

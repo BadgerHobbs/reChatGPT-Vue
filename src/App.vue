@@ -184,7 +184,7 @@ export default {
 </script>
 
 <template>
-  <main class="width-full height-full overflow-auto"
+  <main style="min-height: 100vh;"
     :data-color-mode="(settings.theme === 'dark' || settings.theme === 'dark-dimmed' || settings.theme === 'dark-high-contrast') ? 'dark' : (settings.theme === 'light' ? 'light' : 'auto')"
     :data-light-theme="(settings.theme === 'dark' || settings.theme === 'dark-dimmed' || settings.theme === 'dark-high-contrast') ? 'null' : (settings.theme === 'light' || settings.theme === 'system' ? 'light' : 'null')"
     :data-dark-theme="(settings.theme === 'dark' || settings.theme === 'system') ? 'dark' : (settings.theme === 'dark-dimmed' ? 'dark_dimmed' : (settings.theme === 'dark-high-contrast' ? 'dark_high_contrast' : 'null'))">
