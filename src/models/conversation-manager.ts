@@ -147,18 +147,27 @@ export class Conversation {
 				stream: true,
 			});
 
-			let chunks = [];
+			let chunks: string[] = [];
+			let reRenderMessage = false;
+
+			// Re-Render message content no more than every 75ms
+			setInterval(() => {
+				if (reRenderMessage) {
+
+					// Trigger Vue3 reactivity
+					this.messages[this.messages.length - 1] = new Message(
+						responseMessage.id,
+						"assistant",
+						chunks.join(""),
+						responseMessage.date
+					);
+					reRenderMessage = false;
+				}
+			}, 75);
 
 			for await (const chunk of response) {
-				chunks.push(chunk.choices[0].delta.content);
-
-				// Trigger Vue3 reactivity
-				this.messages[this.messages.length - 1] = new Message(
-					responseMessage.id,
-					"assistant",
-					chunks.join(""),
-					responseMessage.date
-				);
+				chunks.push(chunk.choices[0].delta.content!);
+				reRenderMessage = true;
 			}
 		} else {
 			const response = await openai.chat.completions.create({
