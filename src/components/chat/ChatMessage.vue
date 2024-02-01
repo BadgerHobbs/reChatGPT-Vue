@@ -39,12 +39,33 @@ export default {
     /**
      * Scroll to bottom of page when message updated.
      */
-    updated() {
-        window.scrollTo({
-            top: document.body.scrollHeight,
-            behavior: "auto",
-        });
-    }
+    updated() {        
+        if (this.autoScroll) {
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: "auto",
+            });
+        }
+    },
+    data() {
+        return {
+            autoScroll: true
+        };
+    },
+    methods: {
+        /**
+         * Set auto scroll value on scroll depending on if at bottom of page or not.
+         */
+        onScroll() {
+            this.autoScroll = window.innerHeight + window.scrollY >= document.body.offsetHeight - 10;
+        },
+    },
+    mounted() {
+        window.addEventListener('scroll', this.onScroll, { passive: true });
+    },
+    beforeUnmount() {
+        window.removeEventListener('scroll', this.onScroll);
+    },
 }
 </script>
 
