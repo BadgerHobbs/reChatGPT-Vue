@@ -1,5 +1,6 @@
 
 <script lang="ts">
+import { ref } from "vue";
 import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
 import hljs from 'highlight.js';
@@ -16,6 +17,8 @@ export default {
     },
     emits: ['click:revertToMessage', 'click:recreateMessage'],
     setup() {
+        const chatMessage = ref(null)
+
         const marked = new Marked(
             markedHighlight({
                 highlight(code, lang) {
@@ -25,6 +28,7 @@ export default {
         );
 
         return {
+            chatMessage,
             marked,
         }
     },
@@ -46,6 +50,8 @@ export default {
                 behavior: "auto",
             });
         }
+
+        this.insertCopyToClipboard();
     },
     data() {
         return {
@@ -59,9 +65,65 @@ export default {
         onScroll() {
             this.autoScroll = window.innerHeight + window.scrollY >= document.body.offsetHeight - 10;
         },
+        /**
+         * Insert copy to clipboard buttons into markdown code blocks.
+         */
+        insertCopyToClipboard() {
+            const codeBlocks = (this.$refs as any).chatMessage.querySelectorAll("pre code");
+
+            for (let codeBlock of codeBlocks) {
+                // Create button and append it to code block
+                const copyButton = document.createElement('button');
+                copyButton.className = 'btn-octicon top-0 right-0 position-absolute m-2 hidden-child d-flex';
+                copyButton.type = "button";
+                copyButton.innerHTML = `
+                    <svg class="octicon octicon-clippy" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                        <path 
+                            d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z">
+                        </path>
+                    </svg>
+                    <svg class="octicon octicon-check color-fg-success" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                        <path 
+                        d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z">
+                        </path>
+                    </svg>
+                `;
+
+                copyButton.addEventListener('click', () => {
+                    // Trigger copy to clipboard function
+                    this.copyToClipboard(codeBlock);
+
+                    // Add class to change the icon to a check mark
+                    copyButton.classList.add('icon-checked');
+
+                    // Set a timeout to remove the class after n seconds (e.g., 3 seconds)
+                    setTimeout(() => {
+                        copyButton.classList.remove('icon-checked');
+                    }, 2500);
+                });
+                
+                // Append button to the block's parent element
+                codeBlock.parentElement!.style.position = 'relative';
+                codeBlock.parentElement!.prepend(copyButton);
+            }
+
+            const preSections = (this.$refs as any).chatMessage.querySelectorAll("pre");
+
+            for (let preSection of preSections) {
+                preSection.classList.add("parent")
+            }
+        },
+        /**
+         * Copy code block content to clipboard.
+         * @param {Element} codeElement - Code block to copy contents of.
+         */
+        copyToClipboard(codeElement: Element) {
+            navigator.clipboard.writeText(codeElement.textContent!)
+        }
     },
     mounted() {
         window.addEventListener('scroll', this.onScroll, { passive: true });
+        this.insertCopyToClipboard();
     },
     beforeUnmount() {
         window.removeEventListener('scroll', this.onScroll);
@@ -70,7 +132,7 @@ export default {
 </script>
 
 <template>
-    <div class="TimelineItem">
+    <div ref="chatMessage" class="TimelineItem">
 
         <div v-if="message.role === 'user'" class="TimelineItem-badge">
             <svg class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
@@ -127,7 +189,7 @@ export default {
             </button>
         </div>
         <div v-else-if="message.role === 'system'"
-            class="TimelineItem-body Box Box-row--gray color-fg-default parent d-flex ml-auto parent">
+            class="TimelineItem-body Box Box-row--gray color-fg-default parent d-flex ml-auto">
             <div class="m-3 width-full overflow-hidden" style="white-space: pre-wrap;">{{ message.content }}</div>
             <button class="btn-octicon mt-auto ml-auto hidden-child" type="button"
                 @click="$emit('click:revertToMessage', message.id)">
@@ -146,12 +208,33 @@ export default {
     </div>
 </template>
 
-<style scoped>
+<style>
+/* CSS for icons to show only on parent hover */
 .parent .hidden-child {
     visibility: hidden;
 }
 
 .parent:hover .hidden-child {
     visibility: visible;
+}
+
+
+/* CSS for the default clipboard icon */
+.octicon-clippy {
+  display: inline !important;
+}
+
+/* CSS for the check mark icon. Hidden at first */
+.octicon-check {
+  display: none !important;
+}
+
+/* CSS for showing the check mark */
+.icon-checked .octicon-clippy {
+  display: none !important;
+}
+
+.icon-checked .octicon-check {
+  display: inline !important;
 }
 </style>
