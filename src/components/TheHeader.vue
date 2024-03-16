@@ -4,6 +4,7 @@ import SettingsModal from "./settings/SettingsModal.vue";
 import favicon from "@/assets/favicon.png";
 
 import Settings from "@/models/settings";
+import { Conversations } from '@/models/conversation-manager';
 
 export default {
   name: "TheHeader",
@@ -14,7 +15,11 @@ export default {
     settings: {
       type: Settings,
       required: true,
-    }
+    },
+    conversations: {
+      type: Conversations,
+      required: true,
+    },
   },
   data() {
     return {
@@ -47,7 +52,7 @@ export default {
           </svg>
         </summary>
 
-        <SettingsModal :settings="settings" />
+        <SettingsModal :settings="settings" :conversations="conversations" />
 
       </details>
 

@@ -6,6 +6,7 @@ import SettingTextArea from "./SettingTextArea.vue";
 import SettingButton from "./SettingButton.vue";
 
 import Settings from "@/models/settings";
+import { Conversations } from '@/models/conversation-manager';
 
 export default {
     name: "SettingsModal",
@@ -19,7 +20,11 @@ export default {
         settings: {
             type: Settings,
             required: true,
-        }
+        },
+        conversations: {
+            type: Conversations,
+            required: true,
+        },
     },
     methods: {
         /**
@@ -28,8 +33,22 @@ export default {
         saveChanges() {
             this.settings.saveToLocalStorage();
         },
-        exportJson() { },
-        importJson() { }
+
+        /**
+         * Export Conversations object as JSON.
+         */
+        exportJson() {
+            this.conversations.exportJson();
+        },
+
+        /**
+         * Import Conversations object from JSON.
+         */
+        async importJson() {
+            const conversations = await Conversations.importJson();
+            conversations.saveToLocalStorage();
+            location.reload();
+        }
     }
 }
 </script>

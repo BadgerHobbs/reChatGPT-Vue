@@ -315,4 +315,45 @@ export class Conversations {
 	static clearLocalStorage() {
 		localStorage.removeItem("conversations");
 	}
+
+	/**
+	 * Export the Conversations object as JSON.
+	 */
+	exportJson() {
+		const jsonString = JSON.stringify(this.toJSON(), null, 2);
+        const blob = new Blob([jsonString], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("download", "reChatGPT-Conversations.json");
+        link.setAttribute("href", url);
+        document.body.appendChild(link);
+        link.click();
+	}
+
+	/**
+	 * Import the Conversations object from JSON.
+	 */
+	static async importJson(): Promise<Conversations> {
+
+		return new Promise((resolve) => {
+			const fileInput = document.createElement("input");
+			fileInput.type = "file";
+			fileInput.accept = ".json";
+			
+			fileInput.addEventListener("change", (event) => {
+				const files = (event.target as HTMLInputElement).files;
+				if (files && files.length > 0) {
+					const fileReader = new FileReader();
+					
+					fileReader.onload = (e: ProgressEvent<FileReader>) => {
+						const jsonStr = e.target?.result as string;
+						resolve(Conversations.fromJSON(JSON.parse(jsonStr)));
+					};
+					fileReader.readAsText(files[0]);
+				}
+			});
+
+			fileInput.click();
+		});
+	}
 }
