@@ -46,6 +46,19 @@ export default {
      * @returns {OpenAI} OpenAI connection object.
      */
     getOpenAI(): OpenAI {
+
+      // Using Azure OpenAI API
+      if (this.settings.model == "azure") {
+        return new OpenAI({
+          apiKey: this.settings.apiKey!,
+          dangerouslyAllowBrowser: true,
+          baseURL: `https://${this.settings.azureResourceName}.openai.azure.com/openai/deployments/${this.settings.azureDeploymentName}`,
+          defaultQuery: { "api-version": "2024-02-01" },
+          defaultHeaders: { "api-key": this.settings.apiKey },
+        })
+      }
+
+      // Using OpenAI API (default)
       return new OpenAI({
         apiKey: this.settings.apiKey!,
         dangerouslyAllowBrowser: true,

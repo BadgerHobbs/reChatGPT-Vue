@@ -24,6 +24,10 @@ export default class Settings {
 	topP: number | null;
 	user: string | null;
 
+	// Azure OpenAI API Settings
+	azureResourceName: string | null;
+	azureDeploymentName: string | null;
+
 	/**
 	 * Initialise Settings object.
 	 *
@@ -48,6 +52,10 @@ export default class Settings {
 	 * @param {array} tools
 	 * @param {float} topP
 	 * @param {string} user
+	 * 
+	 * Azure OpenAI API Settings
+	 * @param {string} azureResourceName
+	 * @param {string} azureDeploymentName
 	 */
 	constructor(
 		apiKey = null,
@@ -67,7 +75,9 @@ export default class Settings {
 		toolChoice = null,
 		tools = null,
 		topP = null,
-		user = null
+		user = null,
+		azureResourceName = null,
+		azureDeploymentName = null
 	) {
 		this.apiKey = apiKey;
 		this.theme = theme;
@@ -87,6 +97,8 @@ export default class Settings {
 		this.tools = tools;
 		this.topP = topP;
 		this.user = user;
+		this.azureResourceName = azureResourceName;
+		this.azureDeploymentName = azureDeploymentName;
 	}
 
 	/**
@@ -113,6 +125,8 @@ export default class Settings {
 			tools: this.tools,
 			topP: this.topP,
 			user: this.user,
+			azureResourceName: this.azureResourceName,
+			azureDeploymentName: this.azureDeploymentName,
 		};
 	}
 
@@ -141,6 +155,8 @@ export default class Settings {
 			tools,
 			topP,
 			user,
+			azureResourceName,
+			azureDeploymentName,
 		} = json;
 		return new Settings(
 			apiKey,
@@ -160,7 +176,9 @@ export default class Settings {
 			toolChoice,
 			tools,
 			topP,
-			user
+			user,
+			azureResourceName,
+			azureDeploymentName,
 		);
 	}
 
@@ -198,7 +216,9 @@ export default class Settings {
 				settingsData.toolChoice,
 				settingsData.tools,
 				settingsData.topP,
-				settingsData.user
+				settingsData.user,
+				settingsData.azureResourceName,
+				settingsData.azureDeploymentName,
 			);
 		} else {
 			return new Settings();

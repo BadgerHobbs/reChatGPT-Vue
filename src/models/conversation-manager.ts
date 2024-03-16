@@ -147,27 +147,30 @@ export class Conversation {
 				stream: true,
 			});
 
-			let chunks: string[] = [];
-			let reRenderMessage = false;
+			let chunks: string[] = [];			
+			let subChunk = 0;
 
 			// Re-Render message content no more than every 75ms
 			setInterval(() => {
-				if (reRenderMessage) {
 
+				if (subChunk < chunks.length) {
 					// Trigger Vue3 reactivity
 					this.messages[this.messages.length - 1] = new Message(
 						responseMessage.id,
 						"assistant",
-						chunks.join(""),
+						chunks.slice(0, subChunk).join(""),
 						responseMessage.date
 					);
-					reRenderMessage = false;
+					subChunk++;
 				}
 			}, 75);
 
 			for await (const chunk of response) {
-				chunks.push(chunk.choices[0].delta.content!);
-				reRenderMessage = true;
+				const content = chunk.choices[0]?.delta?.content;
+
+				if (content) {
+					chunks.push(content);
+				}
 			}
 		} else {
 			const response = await openai.chat.completions.create({

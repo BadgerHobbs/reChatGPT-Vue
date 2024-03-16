@@ -105,7 +105,14 @@ export default {
                     'gpt-4-0314': 'GPT-4-0314',
                     'gpt-4-0613': 'GPT-4-0613',
                     'gpt-4-1106-preview': 'GPT-4-1106-Preview',
+                    'azure': 'Azure',
                 }" style="width: 50%;" v-model="settings.model" @update:model-value="saveChanges" />
+
+                <SettingTextInput v-if="settings.model == 'azure'" label="Azure Resource Name" placeholder="Defaults to null" style="width: 50%;"
+                    v-model="settings.azureResourceName" @update:model-value="saveChanges" />
+
+                <SettingTextInput v-if="settings.model == 'azure'" label="Azure Deployment Name" placeholder="Defaults to null" style="width: 50%;"
+                    v-model="settings.azureDeploymentName" @update:model-value="saveChanges" />
 
                 <SettingTextArea label="System Message" placeholder="Defaults to null" class="width-full"
                     v-model="settings.systemMessage" @update:model-value="saveChanges" />
