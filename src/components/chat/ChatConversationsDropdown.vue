@@ -38,7 +38,7 @@ export default {
             <div class="SelectMenu-modal">
                 <header class="SelectMenu-header">
                     <h3 class="SelectMenu-title">Conversations</h3>
-                    <button class="SelectMenu-closeButton" type="button">
+                    <button class="SelectMenu-closeButton" type="button" @click="(event) => (event.currentTarget as HTMLElement).closest('details')!.removeAttribute('open')">
                         <svg class="octicon octicon-x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16"
                             height="16">
                             <path fill-rule="evenodd" clip-rule="evenodd"
