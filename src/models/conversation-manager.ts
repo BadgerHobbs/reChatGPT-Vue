@@ -148,28 +148,21 @@ export class Conversation {
 			});
 
 			let chunks: string[] = [];			
-			let subChunk = 0;
-
-			// Re-Render message content no more than every 75ms
-			setInterval(() => {
-
-				if (subChunk < chunks.length) {
-					// Trigger Vue3 reactivity
-					this.messages[this.messages.length - 1] = new Message(
-						responseMessage.id,
-						"assistant",
-						chunks.slice(0, subChunk).join(""),
-						responseMessage.date
-					);
-					subChunk++;
-				}
-			}, 75);
 
 			for await (const chunk of response) {
 				const content = chunk.choices[0]?.delta?.content;
 
 				if (content) {
 					chunks.push(content);
+
+					// Trigger Vue3 reactivity one chunk at a time, waiting 75ms between updates
+					this.messages[this.messages.length - 1] = new Message(
+						responseMessage.id,
+						"assistant",
+						chunks.join(""),
+						responseMessage.date
+					);
+					await new Promise(resolve => setTimeout(resolve, 75));
 				}
 			}
 		} else {
