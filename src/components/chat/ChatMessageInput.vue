@@ -43,8 +43,11 @@ export default {
         /**
          * Resize on modelValue change.
          */
-        modelValue() {
-            this.autoResize(this.$refs.messageTextArea);            
+        modelValue: {
+            handler() {
+                this.autoResize(this.$refs.messageTextArea); 
+            },
+            flush: "post"
         },
 
         /**
