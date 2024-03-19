@@ -17,6 +17,7 @@ export class Message {
 	role: string;
 	content: string;
 	date: Date;
+	loading: Boolean;
 
 	/**
 	 * Initialise Message object.
@@ -24,17 +25,20 @@ export class Message {
 	 * @param {string | null} role Message role.
 	 * @param {string | null} content Message content.
 	 * @param {Date | null} date Message date.
+	 * @param {Boolean | null} loading Message loading.
 	 */
 	constructor(
 		id: string | null = null,
 		role: string | null = null,
 		content: string | null = null,
-		date: Date | null = null
+		date: Date | null = null,
+		loading: Boolean | null = null,
 	) {
 		this.id = id ?? uuid();
 		this.role = role ?? "user";
 		this.content = content ?? "";
 		this.date = date ?? new Date();
+		this.loading = loading ?? false;
 	}
 
 	/**
@@ -137,7 +141,7 @@ export class Conversation {
 		}
 
 		// Create new message.
-		const responseMessage = new Message(null, "loading", null, null);
+		const responseMessage = new Message(null, "loading", null, null, true);
 		this.messages.push(responseMessage);
 
 		if (settings.stream?.toLowerCase() !== "false") {
@@ -160,11 +164,13 @@ export class Conversation {
 						responseMessage.id,
 						"assistant",
 						chunks.join(""),
-						responseMessage.date
+						responseMessage.date,
+						true,
 					);
 					await new Promise(resolve => setTimeout(resolve, 75));
 				}
 			}
+			this.messages[this.messages.length - 1].loading = false;
 		} else {
 			const response = await openai.chat.completions.create({
 				messages: messages,
@@ -176,7 +182,8 @@ export class Conversation {
 				responseMessage.id,
 				"assistant",
 				response.choices[0].message.content!,
-				responseMessage.date
+				responseMessage.date,
+				false,
 			);
 		}
 	}
