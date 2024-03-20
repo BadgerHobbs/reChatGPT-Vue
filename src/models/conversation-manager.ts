@@ -167,7 +167,7 @@ export class Conversation {
 						responseMessage.date,
 						true,
 					);
-					await new Promise(resolve => setTimeout(resolve, 75));
+					await new Promise(resolve => setTimeout(resolve, 50));
 				}
 			}
 			this.messages[this.messages.length - 1].loading = false;
