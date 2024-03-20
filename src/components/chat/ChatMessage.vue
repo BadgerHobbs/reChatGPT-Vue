@@ -37,7 +37,31 @@ export default {
          * Parse message content into markdown HTML.
          */
         markdown() {
-            return this.marked.parse(`${this.message.content}${this.message.loading? "<span class='animated-pipe'>|</span>" : ""}`);
+
+            const html = this.marked.parse(this.message.content) as string;
+
+            if (!this.message.loading) {
+                return html;
+            }
+
+            const markdown = new DOMParser().parseFromString(html, "text/html");
+            const body = markdown.documentElement.getElementsByTagName("body")[0];
+            const children = body.children;
+
+            const animatedPipe = "<span class='animated-pipe'>|</span>";
+
+            if (children.length > 0 && children[children.length - 1].tagName.toLowerCase() !== "pre") {
+                children[children.length - 1].innerHTML += animatedPipe;
+            } else {
+                const codeElement = children[children.length - 1].getElementsByTagName("code")[0];
+
+                if (codeElement?.lastChild?.textContent) {
+                    codeElement.lastChild.textContent = codeElement.lastChild.textContent.trimEnd();
+                    codeElement.innerHTML += animatedPipe;
+                }
+            }
+
+            return body.outerHTML;
         }
     },
     /**
