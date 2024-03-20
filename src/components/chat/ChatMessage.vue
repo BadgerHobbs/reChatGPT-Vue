@@ -37,7 +37,7 @@ export default {
          * Parse message content into markdown HTML.
          */
         markdown() {
-            return this.marked.parse(`${this.message.content}${this.message.loading? "<span class='animated-pipe'>|</span>" : ""}`);
+            return this.marked.parse(this.message.content);
         }
     },
     /**
@@ -236,15 +236,5 @@ export default {
 
 .icon-checked .octicon-check {
   display: inline !important;
-}
-
-/* CSS for animating pipe (typing indictor) */
-.animated-pipe {
-  animation: flash 1s steps(1) infinite;
-}
-
-@keyframes flash {
-  0%, 50% { opacity: 1; }
-  50.01%, 100% { opacity: 0; }
 }
 </style>
