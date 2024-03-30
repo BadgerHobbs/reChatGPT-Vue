@@ -49,7 +49,7 @@ export default {
                 </header>
                 <form class="SelectMenu-filter">
                     <input class="SelectMenu-input form-control" type="text" placeholder="Filter" v-model="filter" @input="() => {
-                        filteredValues = conversations.conversations.filter((item: any) => item.toLowerCase().includes(filter.toLowerCase()))
+                        filteredValues = conversations.conversations.filter((conversation: Conversation) => conversation.name.toLowerCase().includes(filter.toLowerCase()))
                     }">
                 </form>
                 <div class="SelectMenu-list">
