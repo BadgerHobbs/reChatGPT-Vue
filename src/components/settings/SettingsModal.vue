@@ -113,17 +113,25 @@ export default {
 
                 <SettingDropdown label="Model" placeholder="Select Model" :values="{
                     'gpt-3.5-turbo': 'GPT-3.5-Turbo',
-                    'gpt-3.5-turbo-0301': 'GPT-3.5-Turbo-0301',
+                    'gpt-3.5-turbo-0125': 'GPT-3.5-Turbo-0125',
                     'gpt-3.5-turbo-0613': 'GPT-3.5-Turbo-0613',
                     'gpt-3.5-turbo-1106': 'GPT-3.5-Turbo-1106',
                     'gpt-3.5-turbo-16k': 'GPT-3.5-Turbo-16k',
                     'gpt-3.5-turbo-16k-0613': 'GPT-3.5-Turbo-16k-0613',
                     'gpt-3.5-turbo-instruct': 'GPT-3.5-Turbo-Instruct',
-                    'gpt-3.5-turbo-instruct-0914': 'GPT-3.5-Turbo-Instruct-0914',
                     'gpt-4': 'GPT-4',
-                    'gpt-4-0314': 'GPT-4-0314',
+                    'gpt-4-0125-preview': 'GPT-4-0125-Preview',
                     'gpt-4-0613': 'GPT-4-0613',
                     'gpt-4-1106-preview': 'GPT-4-1106-Preview',
+                    'gpt-4-1106-vision-preview': 'GPT-4-1106-Vision-Preview',
+                    'gpt-4-32k': 'GPT-4-32k',
+                    'gpt-4-32k-0613': 'GPT-4-32k-0613',
+                    'gpt-4-turbo': 'GPT-4-Turbo',
+                    'gpt-4-turbo-2024-04-09': 'GPT-4-Turbo-2024-04-09',
+                    'gpt-4-turbo-preview': 'GPT-4-Turbo-Preview',
+                    'gpt-4-vision-preview': 'GPT-4-Vision-Preview',
+                    'gpt-4o': 'GPT-4o',
+                    'gpt-4o-2024-05-13': 'GPT-4o-2024-05-13',
                     'azure': 'Azure',
                 }" style="width: 50%;" v-model="settings.model" @update:model-value="saveChanges" />
 
