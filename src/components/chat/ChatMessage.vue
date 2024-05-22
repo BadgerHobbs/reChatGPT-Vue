@@ -68,13 +68,26 @@ export default {
         /**
          * Insert copy to clipboard buttons into markdown code blocks.
          */
-        insertCopyToClipboard() {
-            const codeBlocks = (this.$refs as any).chatMessage.querySelectorAll("pre code");
+         insertCopyToClipboard() {
+            const preSections = (this.$refs as any).chatMessage.querySelectorAll("pre");
 
-            for (let codeBlock of codeBlocks) {
-                // Create button and append it to code block
+            for (let preSection of preSections) {
+                // Create container div and apply styles
+                const container = document.createElement('div');
+                container.className = 'parent';
+                container.style.position = 'relative';
+                preSection.parentNode.insertBefore(container, preSection);
+
+                // Move the preSection into the container
+                container.appendChild(preSection);
+
+                // Get the code element within this preSection
+                const codeBlock = preSection.querySelector('code');
+
+                // Create the copy button element
                 const copyButton = document.createElement('button');
                 copyButton.className = 'btn-octicon top-0 right-0 position-absolute m-2 hidden-child d-flex';
+                copyButton.style.backgroundColor = "var(--bgColor-muted, var(--color-canvas-subtle))";
                 copyButton.type = "button";
                 copyButton.innerHTML = `
                     <svg class="octicon octicon-clippy" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
@@ -89,28 +102,27 @@ export default {
                     </svg>
                 `;
 
+                // Set up the click event listener for the copy button
                 copyButton.addEventListener('click', () => {
-                    // Trigger copy to clipboard function
-                    this.copyToClipboard(codeBlock);
+                    if (codeBlock) {
+                        // Trigger copy to clipboard function
+                        this.copyToClipboard(codeBlock);
 
-                    // Add class to change the icon to a check mark
-                    copyButton.classList.add('icon-checked');
+                        // Add class to change the icon to a check mark
+                        copyButton.classList.add('icon-checked');
 
-                    // Set a timeout to remove the class after n seconds (e.g., 3 seconds)
-                    setTimeout(() => {
-                        copyButton.classList.remove('icon-checked');
-                    }, 2500);
+                        // Set a timeout to remove the class after specified interval (e.g., 2.5 seconds)
+                        setTimeout(() => {
+                            copyButton.classList.remove('icon-checked');
+                        }, 2500);
+                    }
                 });
-                
-                // Append button to the block's parent element
-                codeBlock.parentElement!.style.position = 'relative';
-                codeBlock.parentElement!.prepend(copyButton);
-            }
 
-            const preSections = (this.$refs as any).chatMessage.querySelectorAll("pre");
+                // Now, append the copy button to the container div instead of the pre's parent element
+                container.appendChild(copyButton);
 
-            for (let preSection of preSections) {
-                preSection.classList.add("parent")
+                // Apply any necessary styles to make the pre scrollable horizontally
+                preSection.style.overflowX = 'auto';
             }
         },
         /**
