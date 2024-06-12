@@ -54,15 +54,18 @@ export default {
 
             <ul class="dropdown-menu dropdown-menu-ne" style="min-width: fit-content">
 
-                <li v-for="(v, k) in values">
-                    <a class="dropdown-item" style="cursor: pointer;" @click="() => {
-                        value = k;
-                        $emit('update:modelValue', k);
-                        detailsRef!.removeAttribute('open');
-                    }">
-                        {{ v }}
-                    </a>
-                </li>
+                <div style="overflow: auto; max-height: 13rem;">
+                    <li v-for="(v, k) in values">
+                        <a class="dropdown-item" style="cursor: pointer;" @click="() => {
+                            value = k;
+                            $emit('update:modelValue', k);
+                            detailsRef!.removeAttribute('open');
+                        }">
+                            {{ v }}
+                        </a>
+                    </li>
+                </div>
+
             </ul>
         </details>
     </div>
