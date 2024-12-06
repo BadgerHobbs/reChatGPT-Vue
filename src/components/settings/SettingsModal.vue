@@ -132,6 +132,10 @@ export default {
                     'gpt-4-vision-preview': 'GPT-4-Vision-Preview',
                     'gpt-4o': 'GPT-4o',
                     'gpt-4o-2024-05-13': 'GPT-4o-2024-05-13',
+                    'o1-preview': 'o1-Preview',
+                    'o1-preview-2024-09-12': 'o1-Preview-2024-09-12',
+                    'o1-mini': 'o1-Mini',
+                    'o1-mini-2024-09-12': 'o1-Mini-2024-09-12',
                     'azure': 'Azure',
                 }" style="width: 50%;" v-model="settings.model" @update:model-value="saveChanges" />
 
